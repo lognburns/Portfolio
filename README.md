@@ -16,16 +16,19 @@ Open http://localhost:8000
 
 ```
 Portfolio/
-├── index.html          # Full portfolio site (HTML, CSS, and JS)
-└── assets/images/      # Drop project photos here when ready
+├── index.html
+└── assets/images/
+    ├── hero/           # Homepage hero photo
+    ├── about/          # About section photo
+    ├── case-studies/   # Project / case study images
+    └── general/        # Other images
 ```
 
-## Adding images later
+## Adding images
 
-The site currently uses built-in placeholders. When you have photos ready:
-
-1. Add images to `assets/images/`
-2. Update the relevant sections in `index.html` (hero, about photo frame, case study image blocks)
+1. Save images to the matching folder under `assets/images/`
+2. Reference them in `index.html` (hero already uses `assets/images/hero/logan-burns-hero.png`)
+3. Commit and push
 
 ## Deploy
 
