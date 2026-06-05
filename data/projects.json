@@ -1,0 +1,32 @@
+[
+  {
+    "id": "sample-branding",
+    "title": "Sample Brand Package",
+    "category": "Branding",
+    "description": "Placeholder project — replace this with your own work. Add images to assets/images/projects/ and update this file.",
+    "image": "assets/images/projects/sample-branding.jpg",
+    "thumbnail": "assets/images/projects/sample-branding.jpg",
+    "featured": true,
+    "year": "2025"
+  },
+  {
+    "id": "sample-photography",
+    "title": "Sample Photography",
+    "category": "Photography",
+    "description": "Another placeholder. Send me your photos and project details and I'll add them here.",
+    "image": "assets/images/projects/sample-photography.jpg",
+    "thumbnail": "assets/images/projects/sample-photography.jpg",
+    "featured": true,
+    "year": "2025"
+  },
+  {
+    "id": "sample-graphics",
+    "title": "Sample Social Graphics",
+    "category": "Graphics",
+    "description": "Social media and promotional graphics for teams and brands.",
+    "image": "assets/images/projects/sample-graphics.jpg",
+    "thumbnail": "assets/images/projects/sample-graphics.jpg",
+    "featured": false,
+    "year": "2024"
+  }
+]
