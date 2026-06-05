@@ -10,9 +10,22 @@ const lightboxDescription = document.getElementById("lightbox-description");
 let projects = [];
 let activeFilter = "all";
 
+function getBasePath() {
+  const { pathname } = window.location;
+  if (pathname.endsWith("/")) return pathname;
+  if (pathname.endsWith(".html")) {
+    return pathname.slice(0, pathname.lastIndexOf("/") + 1);
+  }
+  return `${pathname}/`;
+}
+
+function assetUrl(path) {
+  return `${getBasePath()}${path.replace(/^\//, "")}`;
+}
+
 async function loadProjects() {
   try {
-    const response = await fetch("data/projects.json");
+    const response = await fetch(assetUrl("data/projects.json"));
     if (!response.ok) throw new Error("Failed to load projects");
     projects = await response.json();
   } catch {
@@ -107,7 +120,7 @@ function renderProjects() {
     card.setAttribute("tabindex", "0");
     card.setAttribute("aria-label", `View ${project.title}`);
 
-    const imageSrc = project.thumbnail || project.image;
+    const imageSrc = assetUrl(project.thumbnail || project.image);
     const placeholder = createPlaceholderImage(project.title);
 
     card.innerHTML = `
@@ -146,7 +159,7 @@ function renderProjects() {
 }
 
 function openLightbox(project, fallbackSrc) {
-  lightboxImage.src = project.image || fallbackSrc;
+  lightboxImage.src = project.image ? assetUrl(project.image) : fallbackSrc;
   lightboxImage.alt = project.title;
   lightboxCategory.textContent = project.category;
   lightboxTitle.textContent = project.title;
@@ -185,6 +198,11 @@ function setupMobileNav() {
 
 function setupImageFallbacks() {
   document.querySelectorAll("img[data-fallback='placeholder']").forEach((img) => {
+    const src = img.getAttribute("src");
+    if (src && !src.startsWith("http") && !src.startsWith("data:")) {
+      img.src = assetUrl(src);
+    }
+
     img.addEventListener("error", () => {
       img.removeAttribute("src");
       img.alt = "";
