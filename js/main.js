@@ -72,34 +72,17 @@ function getFilteredProjects() {
   return projects.filter((project) => project.category === activeFilter);
 }
 
-function createPlaceholderImage(title) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 800;
-  canvas.height = 600;
-  const ctx = canvas.getContext("2d");
+function hasImage(project) {
+  return Boolean(project.image) && !project.placeholder;
+}
 
-  ctx.fillStyle = "#211e19";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.strokeStyle = "rgba(244, 239, 230, 0.08)";
-  ctx.lineWidth = 2;
-  for (let x = -canvas.height; x < canvas.width; x += 24) {
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x + canvas.height, canvas.height);
-    ctx.stroke();
-  }
-
-  ctx.fillStyle = "#e8c547";
-  ctx.font = "600 24px DM Sans, sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText("Add your image", canvas.width / 2, canvas.height / 2 - 8);
-
-  ctx.fillStyle = "#a39a8c";
-  ctx.font = "16px DM Sans, sans-serif";
-  ctx.fillText(title, canvas.width / 2, canvas.height / 2 + 24);
-
-  return canvas.toDataURL("image/png");
+function placeholderMarkup(label, className = "") {
+  return `
+    <div class="image-placeholder ${className}" aria-hidden="true">
+      <span class="placeholder-icon">+</span>
+      <span class="placeholder-label">${label}</span>
+    </div>
+  `;
 }
 
 function renderProjects() {
@@ -120,17 +103,18 @@ function renderProjects() {
     card.setAttribute("tabindex", "0");
     card.setAttribute("aria-label", `View ${project.title}`);
 
-    const imageSrc = assetUrl(project.thumbnail || project.image);
-    const placeholder = createPlaceholderImage(project.title);
-
-    card.innerHTML = `
-      <div class="work-card-image-wrap">
-        <img
-          src="${imageSrc}"
+    const imageHtml = hasImage(project)
+      ? `<img
+          src="${assetUrl(project.thumbnail || project.image)}"
           alt="${project.title}"
           class="work-card-image"
           loading="lazy"
-        >
+        >`
+      : placeholderMarkup("Image coming soon", "work-card-placeholder");
+
+    card.innerHTML = `
+      <div class="work-card-image-wrap">
+        ${imageHtml}
       </div>
       <div class="work-card-body">
         <p class="work-card-category">${project.category}</p>
@@ -140,12 +124,17 @@ function renderProjects() {
     `;
 
     const img = card.querySelector(".work-card-image");
-    img.addEventListener("error", () => {
-      img.src = placeholder;
-      img.classList.add("placeholder");
-    });
+    if (img) {
+      img.addEventListener("error", () => {
+        img.replaceWith(
+          document.createRange().createContextualFragment(
+            placeholderMarkup("Image coming soon", "work-card-placeholder")
+          )
+        );
+      });
+    }
 
-    const open = () => openLightbox(project, img.src);
+    const open = () => openLightbox(project);
     card.addEventListener("click", open);
     card.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
@@ -158,9 +147,34 @@ function renderProjects() {
   });
 }
 
-function openLightbox(project, fallbackSrc) {
-  lightboxImage.src = project.image ? assetUrl(project.image) : fallbackSrc;
-  lightboxImage.alt = project.title;
+function openLightbox(project) {
+  const usePlaceholder = !hasImage(project);
+  lightboxImage.classList.toggle("hidden", usePlaceholder);
+
+  let placeholder = lightbox.querySelector(".lightbox-placeholder");
+  if (usePlaceholder) {
+    if (!placeholder) {
+      placeholder = document.createElement("div");
+      placeholder.className = "image-placeholder lightbox-placeholder";
+      placeholder.innerHTML = `
+        <span class="placeholder-icon">+</span>
+        <span class="placeholder-label">Image coming soon</span>
+      `;
+      lightboxImage.parentElement.insertBefore(placeholder, lightboxImage);
+    }
+    placeholder.classList.remove("hidden");
+    lightboxImage.removeAttribute("src");
+    lightboxImage.alt = "";
+  } else {
+    placeholder?.classList.add("hidden");
+    lightboxImage.src = assetUrl(project.image);
+    lightboxImage.alt = project.title;
+    lightboxImage.addEventListener("error", () => {
+      lightboxImage.classList.add("hidden");
+      if (placeholder) placeholder.classList.remove("hidden");
+    }, { once: true });
+  }
+
   lightboxCategory.textContent = project.category;
   lightboxTitle.textContent = project.title;
   lightboxDescription.textContent = project.description || "";
@@ -196,20 +210,6 @@ function setupMobileNav() {
   });
 }
 
-function setupImageFallbacks() {
-  document.querySelectorAll("img[data-fallback='placeholder']").forEach((img) => {
-    const src = img.getAttribute("src");
-    if (src && !src.startsWith("http") && !src.startsWith("data:")) {
-      img.src = assetUrl(src);
-    }
-
-    img.addEventListener("error", () => {
-      img.removeAttribute("src");
-      img.alt = "";
-    });
-  });
-}
-
 function setupYear() {
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
@@ -217,6 +217,5 @@ function setupYear() {
 
 setupLightbox();
 setupMobileNav();
-setupImageFallbacks();
 setupYear();
 loadProjects();

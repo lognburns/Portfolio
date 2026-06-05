@@ -236,25 +236,14 @@ h2 em {
   border: 1px solid var(--border);
 }
 
-.hero-frame::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(160deg, var(--accent-soft), transparent 55%);
-  z-index: 1;
-  pointer-events: none;
-}
-
-.hero-image,
-.about-image {
+.image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  background: var(--bg-card);
-}
-
-.hero-image[data-fallback="placeholder"],
-.about-image[data-fallback="placeholder"] {
   background:
     linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%),
     repeating-linear-gradient(
@@ -264,6 +253,27 @@ h2 em {
       rgba(244, 239, 230, 0.03) 12px,
       rgba(244, 239, 230, 0.03) 24px
     );
+}
+
+.placeholder-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 1px dashed rgba(232, 197, 71, 0.45);
+  color: var(--accent);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.placeholder-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 /* Sections */
@@ -346,16 +356,14 @@ h2 em {
   transform: scale(1.04);
 }
 
-.work-card-image.placeholder {
-  background:
-    linear-gradient(135deg, var(--bg-elevated), var(--bg-card)),
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 10px,
-      rgba(244, 239, 230, 0.04) 10px,
-      rgba(244, 239, 230, 0.04) 20px
-    );
+.work-card-placeholder {
+  min-height: 100%;
+}
+
+.work-card-placeholder .placeholder-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.25rem;
 }
 
 .work-card-body {
@@ -541,6 +549,15 @@ h2 em {
   max-height: 60vh;
   object-fit: contain;
   background: var(--bg);
+}
+
+.lightbox-image.hidden {
+  display: none;
+}
+
+.lightbox-placeholder {
+  min-height: 320px;
+  max-height: 60vh;
 }
 
 .lightbox-details {

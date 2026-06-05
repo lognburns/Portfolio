@@ -25,7 +25,20 @@ Optional hero and about photos:
 
 ### 2. Update project data
 
-Edit `data/projects.json`. Each project looks like this:
+Edit `data/projects.json`. Projects without images show placeholders automatically:
+
+```json
+{
+  "id": "unique-slug",
+  "title": "Project Name",
+  "category": "Photography",
+  "description": "Short description shown in the lightbox.",
+  "placeholder": true,
+  "year": "2025"
+}
+```
+
+When you have an image ready, add the file path and remove `placeholder`:
 
 ```json
 {
@@ -35,7 +48,6 @@ Edit `data/projects.json`. Each project looks like this:
   "description": "Short description shown in the lightbox.",
   "image": "assets/images/projects/my-photo.jpg",
   "thumbnail": "assets/images/projects/my-photo.jpg",
-  "featured": true,
   "year": "2025"
 }
 ```
