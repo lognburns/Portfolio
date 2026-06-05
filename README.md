@@ -60,6 +60,8 @@ After the workflow runs, your site will be live at:
 
 **https://lognburns.github.io/Portfolio/**
 
+After enabling Pages with GitHub Actions, each push to `main` redeploys the site automatically.
+
 ## Project structure
 
 ```
