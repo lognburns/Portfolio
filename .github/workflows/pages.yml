@@ -33,7 +33,7 @@ jobs:
         run: |
           mkdir site
           cp index.html .nojekyll site/
-          cp -r css js data assets site/
+          if [ -d assets ]; then cp -r assets site/; fi
 
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
