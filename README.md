@@ -48,11 +48,17 @@ Update the text in `index.html` — hero, about section, and contact details.
 
 ## Deploy to GitHub Pages
 
-1. Push this repo to GitHub
-2. Go to **Settings → Pages**
-3. Set source to **Deploy from branch**
-4. Choose `main` (or your default branch) and `/ (root)`
-5. Save — your site will be live at `https://lognburns.github.io/portfolio/`
+The site auto-deploys from `main` via GitHub Actions.
+
+**One-time setup:**
+
+1. Go to [Settings → Pages](https://github.com/lognburns/Portfolio/settings/pages)
+2. Under **Build and deployment → Source**, choose **GitHub Actions**
+3. Save
+
+After the workflow runs, your site will be live at:
+
+**https://lognburns.github.io/Portfolio/**
 
 ## Project structure
 
